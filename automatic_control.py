@@ -49,6 +49,7 @@ from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-e
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent  # pylint: disable=import-error
 
 # I'll import my new agent here
+from custom_agent import CustomAgent
 
 
 # ==============================================================================
@@ -737,8 +738,8 @@ def game_loop(args):
         elif args.agent == "Behavior":
             agent = BehaviorAgent(world.player, behavior=args.behavior)
         elif args.agent == "Custom":
-            # I'll set my agent here
-            pass
+            agent = CustomAgent(world.player, 30)
+            agent.follow_speed_limits(True)
 
         # Set the agent destination
         spawn_points = world.map.get_spawn_points()
