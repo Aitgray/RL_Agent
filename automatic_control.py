@@ -48,6 +48,8 @@ from agents.navigation.behavior_agent import BehaviorAgent  # pylint: disable=im
 from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent  # pylint: disable=import-error
 
+# I'll import my new agent here
+
 
 # ==============================================================================
 # -- Global functions ----------------------------------------------------------
@@ -734,6 +736,9 @@ def game_loop(args):
             agent.follow_speed_limits(True)
         elif args.agent == "Behavior":
             agent = BehaviorAgent(world.player, behavior=args.behavior)
+        elif args.agent == "Custom":
+            # I'll set my agent here
+            pass
 
         # Set the agent destination
         spawn_points = world.map.get_spawn_points()
@@ -817,7 +822,7 @@ def main():
         '-l', '--loop', action='store_true', dest='loop',
         help='Sets a new random destination upon reaching the previous one (default: False)')
     argparser.add_argument(
-        "-a", "--agent", type=str, choices=["Behavior", "Basic", "Constant"], default="Behavior",
+        "-a", "--agent", type=str, choices=["Behavior", "Basic", "Constant", "Custom"], default="Behavior",
         help="select which agent to run")
     argparser.add_argument(
         '-b', '--behavior', type=str, choices=["cautious", "normal", "aggressive"], default='normal',
