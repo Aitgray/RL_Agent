@@ -71,19 +71,23 @@ class CustomAgent:
 
         throttle = (action[0] + 1) / 2
         steer = np.clip(action[1], -1, 1) # Only turn left or right
-        brake = (action[2], 0, 1)
+        brake = (action[2] + 1) / 2.0
 
         # Speed limit control
         velocity = self.vehicle.get_velocity()
-        current_speed = 3.6 * carla.Vector3D(velocity).length()
-        if current_speed > self.target_speed and self.speed_limits:
+        current_speed = np.sqrt(velocity.x**2 + velocity.y**2 + velocity.z**2)
+        if current_speed > self.target_speed:
             throttle = 0.0
-            brake = np.clip(brake + 0.1, 0, 1) # Brake to reduce speed
+            brake = np.clip(brake + 0.5, 0.0, 1.0)
 
-        control = carla.VehicleControl(throttle=throttle, steer=steer, brake=brake)
-        self.vehicle.apply_control(control)
+        # Cast to float explicitly using a default constructor approach:
+        control = carla.VehicleControl()
+        control.throttle = float(np.clip(throttle, 0.0, 1.0))
+        control.steer = float(steer)
+        control.brake = float(np.clip(brake, 0.0, 1.0))
+        control.manual_gear_shift = False
 
-        return control # idk if I need to actually do this
+        return control
     
     def store_rewards(self, reward):
         self.rewards.append(reward)
